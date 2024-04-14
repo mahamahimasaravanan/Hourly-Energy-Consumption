@@ -1,0 +1,39 @@
+import numpy as np # linear algebra 
+import pandas as pd # data processing 
+from fbprophet import Prophet
+import seaborn as sns
+from statsmodels.tools.eval_measures import rmse
+from fbprophet.diagnostics import cross_validation, performance_metrics 
+from fbprophet.plot import plot_cross_validation_metric
+
+data = pd.read_csv('/content/AEP_hourly.csv') 
+data.shape
+
+min(data['Datetime'])
+
+data.columns = ['ds', 'y'] 
+data.head()
+
+data['ds'] = pd.to_datetime(data['ds'])
+Data.describe()
+
+data.resample(rule='A').mean().plot.bar(title = "Yearly mean energy consumption", figsize=(12,5))
+
+data.resample(rule='Q').mean().plot.bar="Quarterly mean energy consumption", figsize=(18,5))
+
+split_date = '2015-01-01 01:00:00'
+train = data.loc[data.index < split_date].copy() test = data.loc[data.index >= split_date].copy() train.shape
+test.shape
+model = Prophet()
+model.fit(train.reset_index())
+
+pred = model.predict(test.reset_index());
+
+model.plot(pred); model.plot_components(pred);
+
+future_dates = model.make_future_dataframe(periods=24, freq = 'MS') future_dates = model.make_future_dataframe(periods=240, freq = 'H')
+forecast_pred = model.predict(future_dates) forecast_pred.head()
+
+future_dates.tail()
+
+forecast_pred.describe()
